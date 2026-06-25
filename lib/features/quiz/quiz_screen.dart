@@ -73,6 +73,28 @@ class _QuizScreenState extends State<QuizScreen>
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    if (_questions.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Quick Challenge')),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.quiz_outlined, size: 64,
+                    color: AppColors.textSecondary.withValues(alpha: 0.3)),
+                const SizedBox(height: 16),
+                Text('No questions available.',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textSecondary)),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     if (_isComplete) {
       return _buildResultsScreen(context);
     }

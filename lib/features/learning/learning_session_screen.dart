@@ -50,6 +50,28 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    if (_contentLibrary.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Learning Session')),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.menu_book_outlined, size: 64,
+                    color: AppColors.textSecondary.withValues(alpha: 0.3)),
+                const SizedBox(height: 16),
+                Text('No lessons available.',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textSecondary)),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     final sessionState = context.watch<SessionState>();
     final content = sessionState.currentContent ??
         _contentLibrary.first;
