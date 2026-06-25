@@ -18,7 +18,8 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
   final _contentLibrary = <ContentItem>[];
   bool _isInitialized = false;
   bool _showSummary = false;
-  final List<String> _sessionFeedback = [];
+  bool _useSimplified = false;
+  String? _simplifiedBody;
 
   @override
   void initState() {
@@ -213,6 +214,9 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
   }
 
   Widget _buildContentBody(ContentItem content) {
+    final displayText = _useSimplified && _simplifiedBody != null
+        ? _simplifiedBody!
+        : content.body;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -221,11 +225,34 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
       ),
-      child: Text(
-        content.body,
-        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              height: 1.7,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            displayText,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  height: 1.7,
+                ),
+          ),
+          if (_useSimplified) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.softGold.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Text(
+                'Simplified version',
+                style: TextStyle(
+                  color: AppColors.softGold,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
+          ],
+        ],
       ),
     );
   }
@@ -374,16 +401,11 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
             label: 'Need a simpler version',
             child: OutlinedButton.icon(
               onPressed: () {
+                _simplifyContent(content);
                 _recordInteraction(
                   context,
                   content,
                   'requestedSimpler',
-                );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Simplifying...'),
-                    behavior: SnackBarBehavior.floating,
-                  ),
                 );
               },
               icon: const Icon(Icons.remove_circle_outline),
@@ -441,6 +463,40 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _simplifyContent(ContentItem content) {
+    final sentences = content.body.split(RegExp(r'(?<=[.!?])\s+'));
+    String simplified;
+    if (sentences.length <= 2) {
+      simplified = content.body;
+    } else {
+      simplified = sentences.take(2).join(' ');
+      final keyPoints = content.tags.isNotEmpty
+          ? '\n\nKey points: ${content.tags.take(3).join(', ')}'
+          : '';
+      simplified += keyPoints;
+    }
+    setState(() {
+      _useSimplified = true;
+      _simplifiedBody = simplified;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Showing simplified version'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'Original',
+          onPressed: () {
+            setState(() {
+              _useSimplified = false;
+              _simplifiedBody = null;
+            });
+          },
         ),
       ),
     );

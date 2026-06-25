@@ -55,6 +55,28 @@ class _VideoScreenState extends State<VideoScreen>
     super.dispose();
   }
 
+  void _togglePlay() {
+    setState(() => _isPlaying = !_isPlaying);
+    if (_isPlaying) {
+      _simulatePlayback();
+    }
+  }
+
+  void _simulatePlayback() {
+    if (!_isPlaying || _progress >= 1.0) return;
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted || !_isPlaying) return;
+      setState(() {
+        _progress = (_progress + 0.05).clamp(0.0, 1.0);
+      });
+      if (_progress < 1.0) {
+        _simulatePlayback();
+      } else {
+        setState(() => _isPlaying = false);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final video = _videos[_currentVideoIndex];
@@ -88,7 +110,7 @@ class _VideoScreenState extends State<VideoScreen>
     return Semantics(
       label: 'Video: ${video.title}',
       child: GestureDetector(
-        onTap: () => setState(() => _isPlaying = !_isPlaying),
+        onTap: _togglePlay,
         child: Container(
           height: 220,
           decoration: BoxDecoration(

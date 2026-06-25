@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/colors.dart';
 import '../../state/learner_state.dart';
 import '../../state/app_state.dart';
 import '../accessibility/accessibility_settings_screen.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _soundEnabled = true;
+  bool _hapticEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -134,8 +143,13 @@ class SettingsScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: const Text('Sound Effects'),
                 subtitle: const Text('Play sounds for interactions'),
-                value: true,
-                onChanged: (value) {},
+                value: _soundEnabled,
+                onChanged: (value) {
+                  setState(() => _soundEnabled = value);
+                  if (_hapticEnabled) {
+                    HapticFeedback.lightImpact();
+                  }
+                },
                 activeColor: AppColors.calmTeal,
               ),
               const Divider(height: 1),
@@ -143,8 +157,13 @@ class SettingsScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 title: const Text('Haptic Feedback'),
                 subtitle: const Text('Vibrate on key actions'),
-                value: true,
-                onChanged: (value) {},
+                value: _hapticEnabled,
+                onChanged: (value) {
+                  setState(() => _hapticEnabled = value);
+                  if (value) {
+                    HapticFeedback.mediumImpact();
+                  }
+                },
                 activeColor: AppColors.calmTeal,
               ),
             ],

@@ -3,8 +3,19 @@ import 'package:provider/provider.dart';
 import '../../core/theme/colors.dart';
 import '../../state/learner_state.dart';
 
-class AccessibilitySettingsScreen extends StatelessWidget {
+class AccessibilitySettingsScreen extends StatefulWidget {
   const AccessibilitySettingsScreen({super.key});
+
+  @override
+  State<AccessibilitySettingsScreen> createState() =>
+      _AccessibilitySettingsScreenState();
+}
+
+class _AccessibilitySettingsScreenState
+    extends State<AccessibilitySettingsScreen> {
+  bool _simplifiedText = false;
+  bool _highContrast = false;
+  double _lineSpacing = 1.5;
 
   @override
   Widget build(BuildContext context) {
@@ -22,228 +33,224 @@ class AccessibilitySettingsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Visual Settings',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
+              _buildSectionTitle(context, 'Visual Settings'),
               const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.cardLight,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
-                ),
-                child: Column(
-                  children: [
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Reduce Motion'),
-                      subtitle: const Text(
-                        'Minimize animations and transitions',
+              _buildCard(context, [
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Reduce Motion'),
+                  subtitle: const Text(
+                    'Minimize animations and transitions',
+                  ),
+                  value: profile.prefersReducedMotion,
+                  onChanged: (value) =>
+                      learnerState.updateAccessibility(
+                        reducedMotion: value,
                       ),
-                      value: profile.prefersReducedMotion,
-                      onChanged: (value) =>
-                          learnerState.updateAccessibility(
-                            reducedMotion: value,
-                          ),
-                      activeColor: AppColors.calmTeal,
-                    ),
-                    const Divider(height: 1),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Reduce Visuals'),
-                      subtitle: const Text(
-                        'Simplify on-screen elements and decorations',
-                      ),
-                      value: profile.prefersReducedVisuals,
-                      onChanged: (value) =>
-                          learnerState.updateAccessibility(
-                            reducedVisuals: value,
-                          ),
-                      activeColor: AppColors.calmTeal,
-                    ),
-                  ],
+                  activeColor: AppColors.calmTeal,
                 ),
-              ),
+                const Divider(height: 1),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Reduce Visuals'),
+                  subtitle: const Text(
+                    'Simplify on-screen elements and decorations',
+                  ),
+                  value: profile.prefersReducedVisuals,
+                  onChanged: (value) =>
+                      learnerState.updateAccessibility(
+                        reducedVisuals: value,
+                      ),
+                  activeColor: AppColors.calmTeal,
+                ),
+              ]),
               const SizedBox(height: 24),
-              Text(
-                'Font Size',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
+              _buildSectionTitle(context, 'Font Size'),
               const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.cardLight,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Font Size Multiplier',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                        Text(
-                          '${(profile.fontSizeMultiplier * 100).round()}%',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: AppColors.calmTeal,
-                                fontWeight: FontWeight.w700,
-                              ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Slider(
-                      value: profile.fontSizeMultiplier,
-                      min: 0.8,
-                      max: 2.0,
-                      divisions: 12,
-                      label: '${(profile.fontSizeMultiplier * 100).round()}%',
-                      onChanged: (value) =>
-                          learnerState.updateAccessibility(
-                            fontSizeMultiplier: value,
+              _buildCard(context, [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Font Size Multiplier'),
+                          Text(
+                            '${(profile.fontSizeMultiplier * 100).round()}%',
+                            style: const TextStyle(
+                              color: AppColors.calmTeal,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
+                            ),
                           ),
-                      activeColor: AppColors.calmTeal,
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Smaller',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                        ),
-                        Text(
-                          'Larger',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Reading Support',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.cardLight,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
-                ),
-                child: Column(
-                  children: [
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Simplified Text'),
-                      subtitle: const Text(
-                        'Shorter sentences and simpler language',
+                        ],
                       ),
-                      value: profile.depthPreference < 0.4,
-                      onChanged: (value) {},
-                      activeColor: AppColors.calmTeal,
-                    ),
-                    const Divider(height: 1),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('High Contrast'),
-                      subtitle: const Text(
-                        'Increase contrast for better readability',
+                      const SizedBox(height: 12),
+                      Slider(
+                        value: profile.fontSizeMultiplier,
+                        min: 0.8,
+                        max: 2.0,
+                        divisions: 12,
+                        label:
+                            '${(profile.fontSizeMultiplier * 100).round()}%',
+                        onChanged: (value) =>
+                            learnerState.updateAccessibility(
+                              fontSizeMultiplier: value,
+                            ),
+                        activeColor: AppColors.calmTeal,
                       ),
-                      value: false,
-                      onChanged: (value) {},
-                      activeColor: AppColors.calmTeal,
-                    ),
-                    const Divider(height: 1),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Line Spacing'),
-                      subtitle: const Text('Current: 1.5'),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () {},
-                    ),
-                  ],
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Smaller',
+                              style: TextStyle(color: AppColors.textSecondary)),
+                          Text('Larger',
+                              style: TextStyle(color: AppColors.textSecondary)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ]),
               const SizedBox(height: 24),
-              Text(
-                'Accommodations',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
+              _buildSectionTitle(context, 'Reading Support'),
               const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.cardLight,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+              _buildCard(context, [
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Simplified Text'),
+                  subtitle: const Text(
+                    'Shorter sentences and simpler language',
+                  ),
+                  value: _simplifiedText,
+                  onChanged: (value) {
+                    setState(() => _simplifiedText = value);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(value
+                            ? 'Text will be simplified'
+                            : 'Using original text'),
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  },
+                  activeColor: AppColors.calmTeal,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (profile.neurodivergentTraits.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          'Select traits during onboarding to see personalized accommodations.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(color: AppColors.textSecondary),
-                        ),
-                      )
-                    else
-                      ...profile.neurodivergentTraits.map((trait) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.check_circle_outline,
-                                size: 18,
-                                color: AppColors.calmTeal,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '${trait[0].toUpperCase()}${trait.substring(1)} support active',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
+                const Divider(height: 1),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('High Contrast'),
+                  subtitle: const Text(
+                    'Increase contrast for better readability',
+                  ),
+                  value: _highContrast,
+                  onChanged: (value) {
+                    setState(() => _highContrast = value);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(value
+                            ? 'High contrast mode enabled'
+                            : 'High contrast mode disabled'),
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 1),
+                      ),
+                    );
+                  },
+                  activeColor: AppColors.calmTeal,
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Line Spacing'),
+                  subtitle: Text('Current: $_lineSpacing'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle_outline),
+                        onPressed: () {
+                          if (_lineSpacing > 1.0) {
+                            setState(() =>
+                                _lineSpacing = (_lineSpacing - 0.25)
+                                    .clamp(1.0, 3.0));
+                          }
+                        },
+                      ),
+                      Text('$_lineSpacing'),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline),
+                        onPressed: () {
+                          if (_lineSpacing < 3.0) {
+                            setState(() =>
+                                _lineSpacing = (_lineSpacing + 0.25)
+                                    .clamp(1.0, 3.0));
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ]),
+              const SizedBox(height: 24),
+              _buildSectionTitle(context, 'Accommodations'),
+              const SizedBox(height: 12),
+              _buildCard(context, [
+                if (profile.neurodivergentTraits.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      'Select traits during onboarding to see personalized accommodations.',
+                      style: TextStyle(color: AppColors.textSecondary),
+                    ),
+                  )
+                else
+                  ...profile.neurodivergentTraits.map((trait) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.check_circle_outline,
+                              size: 18, color: AppColors.calmTeal),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${trait[0].toUpperCase()}${trait.substring(1)} support active',
                           ),
-                        );
-                      }),
-                  ],
-                ),
-              ),
+                        ],
+                      ),
+                    );
+                  }),
+              ]),
               const SizedBox(height: 32),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSectionTitle(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(context)
+          .textTheme
+          .titleLarge
+          ?.copyWith(fontWeight: FontWeight.w600),
+    );
+  }
+
+  Widget _buildCard(BuildContext context, List<Widget> children) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardTheme.color,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+      ),
+      child: Column(children: children),
     );
   }
 }

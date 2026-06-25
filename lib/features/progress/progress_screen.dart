@@ -196,7 +196,7 @@ class ProgressScreen extends StatelessWidget {
           ),
           child: Column(
             children: weights.entries.map((entry) {
-              final color = _getModeColor(entry.key.name);
+              final color = _getModeColor(entry.key.toString().split('.').last);
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
@@ -204,7 +204,7 @@ class ProgressScreen extends StatelessWidget {
                     SizedBox(
                       width: 100,
                       child: Text(
-                        entry.key.name.replaceAll('_', ' '),
+                        entry.key.toString().split('.').last.replaceAll('_', ' '),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),

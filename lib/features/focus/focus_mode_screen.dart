@@ -125,44 +125,49 @@ class _FocusModeScreenState extends State<FocusModeScreen>
       animation: _pulseController,
       builder: (context, child) {
         final scale = isRunning ? 1.0 + (_pulseController.value * 0.02) : 1.0;
-        return Transform.scale(
-          scale: scale,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox(
-                width: 260,
-                height: 260,
-                child: CircularProgressIndicator(
-                  value: progress,
-                  strokeWidth: 8,
-                  backgroundColor: Colors.grey.withValues(alpha: 0.1),
-                  color: _focusState.isBreak
-                      ? AppColors.softGold
-                      : AppColors.calmTeal,
-                ),
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final size = constraints.maxWidth.clamp(200.0, 280.0);
+            return Transform.scale(
+              scale: scale,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Text(
-                    _focusState.formattedTime,
-                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 52,
-                        ),
+                  SizedBox(
+                    width: size,
+                    height: size,
+                    child: CircularProgressIndicator(
+                      value: progress,
+                      strokeWidth: 8,
+                      backgroundColor: Colors.grey.withValues(alpha: 0.1),
+                      color: _focusState.isBreak
+                          ? AppColors.softGold
+                          : AppColors.calmTeal,
+                    ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _focusState.isBreak ? 'break time' : 'focus time',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _focusState.formattedTime,
+                        style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              fontSize: size / 5,
+                            ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _focusState.isBreak ? 'break time' : 'focus time',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

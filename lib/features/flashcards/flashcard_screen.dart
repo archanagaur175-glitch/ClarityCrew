@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/colors.dart';
@@ -167,13 +168,18 @@ class _FlashcardScreenState extends State<FlashcardScreen>
         child: AnimatedBuilder(
           animation: _flipAnimation,
           builder: (context, child) {
-            final isFront = _flipAnimation.value < 0.5;
             return Transform(
               alignment: Alignment.center,
               transform: Matrix4.identity()
                 ..setEntry(3, 2, 0.001)
-                ..rotateY(_flipAnimation.value * 3.14159),
-              child: isFront ? _buildFront(card) : _buildBack(card),
+                ..rotateY(_flipAnimation.value * math.pi),
+              child: _flipAnimation.value < 0.5
+                  ? _buildFront(card)
+                  : Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()..rotateY(math.pi),
+                      child: _buildBack(card),
+                    ),
             );
           },
         ),
