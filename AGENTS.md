@@ -40,6 +40,12 @@ ClarityCrew is an academic study app for neurodivergent learners. It is not a di
 - After implementing, verify the feature with real data.
 - Prefer small focused changes over broad rewrites.
 - If a feature is missing required data, create the data schema and seed data first.
+- All builds are done via GitHub Actions CI. Do not attempt local builds — Flutter is not installed locally.
+
+## Build & Deploy
+- Trigger CI build by pushing to `master` on GitHub.
+- Download the APK artifact via `gh run download <run-id> --name claritycrew-apk --dir <path>`.
+- Do not run `flutter build` locally. Always use the CI pipeline.
 
 ## Done means
 A feature is only done when:
