@@ -1,0 +1,30 @@
+# Flutter
+.dart_tool/
+.packages
+.pub/
+build/
+.idea/
+.vscode/
+
+# Android
+android/local.properties
+android/.gradle/
+android/build/
+android/captures/
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+# Firebase (user provides these)
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# IDE
+*.iml
+
+# System
+.DS_Store
+Thumbs.db
