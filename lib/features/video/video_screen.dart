@@ -72,7 +72,9 @@ class _VideoScreenState extends State<VideoScreen> {
     _isWatched = progress?['watched'] as bool? ?? false;
 
     try {
-      final controller = VideoPlayerController.asset(video.assetPath);
+      final controller = video.assetPath.startsWith('http')
+          ? VideoPlayerController.networkUrl(Uri.parse(video.assetPath))
+          : VideoPlayerController.asset(video.assetPath);
       await controller.initialize();
       final positionMs = progress?['positionMs'] as int? ?? 0;
       if (positionMs > 0) {

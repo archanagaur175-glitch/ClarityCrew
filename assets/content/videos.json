@@ -9,7 +9,7 @@
     "subject": "Algebra",
     "chapter": "Linear Equations",
     "difficulty": "beginner",
-    "assetPath": "assets/videos/algebra_linear_eq.mp4",
+    "assetPath": "https://www.youtube.com/watch?v=Ft2_QtXAnh8",
     "keyPoints": [
       "Isolate the variable by undoing operations in reverse order",
       "Whatever you do to one side, do to the other",
@@ -113,7 +113,7 @@
     "subject": "Chemistry",
     "chapter": "Periodic Table",
     "difficulty": "intermediate",
-    "assetPath": "assets/videos/chem_periodic.mp4",
+    "assetPath": "https://www.youtube.com/watch?v=okolv1y6IlE",
     "keyPoints": [
       "Atomic number equals proton count",
       "Groups share valence electrons",
@@ -161,7 +161,7 @@
     "subject": "US History",
     "chapter": "The Constitution",
     "difficulty": "intermediate",
-    "assetPath": "assets/videos/us_history_constitution.mp4",
+    "assetPath": "https://www.khanacademy.org/humanities/us-history/road-to-revolution/creating-a-nation/v/the-us-constitution",
     "keyPoints": [
       "The Constitution is the supreme law of the US",
       "Three branches separate powers",
@@ -186,7 +186,7 @@
     "subject": "English",
     "chapter": "Writing",
     "difficulty": "intermediate",
-    "assetPath": "assets/videos/english_essay.mp4",
+    "assetPath": "https://www.youtube.com/watch?v=t0mmmghmcXg",
     "keyPoints": [
       "Introduction includes hook, context, and thesis",
       "Each body paragraph supports one main point",
