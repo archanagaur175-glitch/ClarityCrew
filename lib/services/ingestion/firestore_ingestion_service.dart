@@ -12,7 +12,7 @@ class FirestoreIngestionService {
   FirestoreIngestionService({
     FirebaseFirestore? firestore,
     required ImportLogger log,
-  })  : _firestore = firestore ?? FirebaseFirestore.instanceFor(databaseId: 'claritycrew'),
+  })  : _firestore = firestore ?? FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'claritycrew'),
         _log = log;
 
   Future<bool> ensureSubjectExists({
