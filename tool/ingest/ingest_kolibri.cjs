@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const { getFirestore } = require('firebase-admin/firestore');
 const { readFileSync } = require('fs');
 const { searchAllKinds, bestVideoUrl, sanitizeId, formatDuration, sleep } = require('./kolibri_fetch.cjs');
 
@@ -47,7 +48,7 @@ async function runImport() {
     credential: admin.credential.cert(sa),
     projectId: sa.project_id,
   });
-  const db = admin.firestore('claritycrew');
+  const db = getFirestore(admin.app(), 'claritycrew');
   db.settings({ preferRest: true });
 
   // Probe: list collections to verify connectivity
